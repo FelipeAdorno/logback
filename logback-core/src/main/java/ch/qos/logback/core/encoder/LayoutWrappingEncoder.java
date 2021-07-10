@@ -15,10 +15,10 @@ package ch.qos.logback.core.encoder;
 
 import java.nio.charset.Charset;
 
-import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.OutputStreamAppender;
+import ch.qos.logback.core.spi.ContextAware;
 
 public class LayoutWrappingEncoder<E> extends EncoderBase<E> {
 
@@ -26,14 +26,15 @@ public class LayoutWrappingEncoder<E> extends EncoderBase<E> {
 
     /**
      * The charset to use when converting a String into bytes.
-     * <p>
-     * By default this property has the value {@code null} which corresponds to
+     * <p/>
+     * By default this property has the value
+     * <code>null</null> which corresponds to
      * the system's default charset.
      */
     private Charset charset;
 
-    Appender<?> parent;
-    Boolean immediateFlush = null;
+    private ContextAware parent;
+    private Boolean immediateFlush;
 
     public Layout<E> getLayout() {
         return layout;
@@ -50,8 +51,9 @@ public class LayoutWrappingEncoder<E> extends EncoderBase<E> {
     /**
      * Set the charset to use when converting the string returned by the layout
      * into bytes.
-     * <p>
-     * By default this property has the value {@code null} which corresponds to
+     * <p/>
+     * By default this property has the value
+     * <code>null</null> which corresponds to
      * the system's default charset.
      *
      * @param charset
@@ -115,7 +117,7 @@ public class LayoutWrappingEncoder<E> extends EncoderBase<E> {
     }
 
     public boolean isStarted() {
-        return started;
+        return false;
     }
 
     public void start() {
@@ -143,12 +145,11 @@ public class LayoutWrappingEncoder<E> extends EncoderBase<E> {
     }
 
     /**
-     * This method allows RollingPolicy implementations to be aware of their
-     * containing appender.
+     * This method allows RollingPolicy implementations to be aware of their parent.
      * 
      * @param parent
      */
-    public void setParent(Appender<?> parent) {
+    public void setParent(ContextAware parent) {
         this.parent = parent;
     }
 }
